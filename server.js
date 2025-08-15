@@ -8,16 +8,12 @@ app.use(express.json());
 
 const PORT = process.env.PORT || 3000;
 
-// Endpoint to generate cake image
 app.post("/generate", async (req, res) => {
   try {
     const { prompt } = req.body;
+    if (!prompt) return res.status(400).json({ error: "Missing prompt" });
 
-    if (!prompt) {
-      return res.status(400).json({ error: "Missing prompt" });
-    }
-
-    const response = await fetch("https://api.openai.com/v1/images/generations", {
+    const openaiRes = await fetch("https://api.openai.com/v1/images/generations", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -30,10 +26,16 @@ app.post("/generate", async (req, res) => {
       })
     });
 
-    const data = await response.json();
+    const openaiData = await openaiRes.json();
+    if (openaiData.error) return res.status(500).json({ error: openaiData.error.message });
 
-    if (data.error) {
-      return res.status(500).json({ error: data.error.message });
-    }
+    res.json({ imageUrl: openaiData.data[0].url });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: "Server error" });
+  }
+});
 
-    res.json({ imageUrl: data
+app.listen(PORT, () => {
+  console.log(`Server running on port ${PORT}`);
+});
