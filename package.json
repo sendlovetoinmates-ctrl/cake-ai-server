@@ -1,7 +1,6 @@
 {
   "name": "cake-ai-server",
   "version": "1.0.0",
-  "description": "AI Cake Generator backend",
   "main": "server.js",
   "type": "module",
   "scripts": {
