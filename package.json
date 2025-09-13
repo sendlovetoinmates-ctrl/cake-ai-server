@@ -1,14 +1,16 @@
 {
   "name": "cake-ai-server",
   "version": "1.0.0",
+  "description": "Express server with OpenAI API",
   "main": "server.js",
   "type": "module",
   "scripts": {
     "start": "node server.js"
   },
   "dependencies": {
+    "dotenv": "^16.4.5",
     "express": "^4.19.2",
-    "cors": "^2.8.5",
-    "node-fetch": "^3.3.2"
+    "openai": "^4.63.0"
   }
 }
+
