@@ -1,41 +1,29 @@
-import express from "express";
-import cors from "cors";
-import fetch from "node-fetch";
+  // server.js
+const express = require("express");
+const cors = require("cors");
 
 const app = express();
+const PORT = process.env.PORT || 3000;
+
+// Middleware
 app.use(cors());
 app.use(express.json());
 
-const PORT = process.env.PORT || 3000;
-
-app.post("/generate", async (req, res) => {
-  try {
-    const { prompt } = req.body;
-    if (!prompt) return res.status(400).json({ error: "Missing prompt" });
-
-    const openaiRes = await fetch("https://api.openai.com/v1/images/generations", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        "Authorization": `Bearer ${process.env.OPENAI_API_KEY}`
-      },
-      body: JSON.stringify({
-        model: "gpt-image-1",
-        prompt,
-        size: "512x512"
-      })
-    });
-
-    const openaiData = await openaiRes.json();
-    if (openaiData.error) return res.status(500).json({ error: openaiData.error.message });
-
-    res.json({ imageUrl: openaiData.data[0].url });
-  } catch (err) {
-    console.error(err);
-    res.status(500).json({ error: "Server error" });
-  }
+// Debug root route
+app.get("/", (req, res) => {
+  res.send("✅ Your Render server is running!");
 });
 
+// Debug test API
+app.get("/test", (req, res) => {
+  res.json({
+    message: "Hello from your Render server 🎉",
+    time: new Date().toISOString(),
+  });
+});
+
+// Start server
 app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`);
+  console.log(`🚀 Server running on port ${PORT}`);
 });
+
